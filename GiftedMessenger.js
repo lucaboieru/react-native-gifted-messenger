@@ -90,7 +90,7 @@ var GiftedMessenger = React.createClass({
 
     var textInputHeight = 0;
     if (this.props.hideTextInput === false) {
-      textInputHeight = 44;
+      textInputHeight = 74;
     }
 
     this.listViewMaxHeight = this.props.maxHeight - textInputHeight;
@@ -139,34 +139,6 @@ var GiftedMessenger = React.createClass({
     return null;
   },
 
-  renderDate(rowData = {}, rowID = null) {
-    var diffMessage = null;
-    if (rowData.isOld === true) {
-      diffMessage = this.getPreviousMessage(rowID);
-    } else {
-      diffMessage = this.getNextMessage(rowID);
-    }
-    if (rowData.date instanceof Date) {
-      if (diffMessage === null) {
-        return (
-          <Text style={[this.styles.date]}>
-            {moment(rowData.date).calendar()}
-          </Text>
-        );
-      } else if (diffMessage.date instanceof Date) {
-        let diff = moment(rowData.date).diff(moment(diffMessage.date), 'minutes');
-        if (diff > 5) {
-          return (
-            <Text style={[this.styles.date]}>
-              {moment(rowData.date).calendar()}
-            </Text>
-          );
-        }
-      }
-    }
-    return null;
-  },
-
   renderRow(rowData = {}, sectionID = null, rowID = null) {
 
     var diffMessage = null;
@@ -178,8 +150,8 @@ var GiftedMessenger = React.createClass({
 
     return (
       <View>
-        {this.renderDate(rowData, rowID)}
         <Message
+          date={rowData.date}
           rowData={rowData}
           rowID={rowID}
           onErrorButtonPress={this.props.onErrorButtonPress}
@@ -239,7 +211,7 @@ var GiftedMessenger = React.createClass({
 
   onKeyboardWillHide(e) {
     Animated.timing(this.state.height, {
-      toValue: this.listViewMaxHeight,
+      toValue: this.listViewMaxHeight - 20,
       duration: 150,
     }).start();
   },
@@ -342,7 +314,9 @@ var GiftedMessenger = React.createClass({
         }
       }
     }
-    return null;
+    return (
+      <View style={{height: 15}} />
+    );
   },
 
   prependMessages(messages = []) {
@@ -503,6 +477,7 @@ var GiftedMessenger = React.createClass({
             placeholder={this.props.placeholder}
             ref='textInput'
             onChangeText={this.onChangeText}
+            multiline={true}
             value={this.state.text}
             autoFocus={this.props.autoFocus}
             returnKeyType={this.props.submitOnReturn ? 'send' : 'default'}
@@ -529,13 +504,13 @@ var GiftedMessenger = React.createClass({
     this.styles = {
       container: {
         flex: 1,
-        backgroundColor: '#FFF',
+        backgroundColor: '#FFF'
       },
       listView: {
         flex: 1,
       },
       textInputContainer: {
-        height: 44,
+        height: 74,
         borderTopWidth: 1 / PixelRatio.get(),
         borderColor: '#b2b2b2',
         flexDirection: 'row',
@@ -544,7 +519,7 @@ var GiftedMessenger = React.createClass({
       },
       textInput: {
         alignSelf: 'center',
-        height: 30,
+        height: 60,
         width: 100,
         backgroundColor: '#FFF',
         flex: 1,

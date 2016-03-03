@@ -4,8 +4,17 @@ import ErrorButton from './ErrorButton';
 
 var styles = StyleSheet.create({
   rowContainer: {
-    flexDirection: 'row',
+    flexDirection: 'column',
     marginBottom: 10,
+    paddingLeft: 10,
+    paddingRight: 10
+  },
+  dateText: {
+    fontSize: 10,
+    color: '#bbbbbb',
+    paddingRight: 7,
+    paddingLeft: 7,
+    paddingTop: 2
   },
   name: {
     color: '#aaaaaa',
@@ -46,7 +55,7 @@ export default class Message extends React.Component {
   constructor(props) {
     super(props);
   }
-  
+
   componentWillMount() {
     Object.assign(styles, this.props.styles);
   }
@@ -62,38 +71,6 @@ export default class Message extends React.Component {
       }
     }
     return null;
-  }
-
-  renderImage(rowData, rowID, diffMessage, forceRenderImage, onImagePress){
-    if (rowData.image !== null) {
-      if (forceRenderImage === true) {
-        diffMessage = null; // force rendering
-      }
-
-      if (diffMessage === null || (diffMessage != null && (rowData.name !== diffMessage.name || rowData.id !== diffMessage.id))) {
-        if (typeof onImagePress === 'function') {
-          return (
-            <TouchableHighlight
-              underlayColor='transparent'
-              onPress={() => onImagePress(rowData, rowID)}
-            >
-              <Image source={rowData.image} style={[styles.imagePosition, styles.image, (rowData.position === 'left' ? styles.imageLeft : styles.imageRight)]}/>
-            </TouchableHighlight>
-          );
-        } else {
-          return (
-            <Image source={rowData.image} style={[styles.imagePosition, styles.image, (rowData.position === 'left' ? styles.imageLeft : styles.imageRight)]}/>
-          );
-        }
-      } else {
-        return (
-          <View style={styles.imagePosition}/>
-        );
-      }
-    }
-    return (
-      <View style={styles.spacer}/>
-    );
   }
 
   renderErrorButton(rowData, rowID, onErrorButtonPress){
@@ -123,6 +100,18 @@ export default class Message extends React.Component {
     return null;
   }
 
+  renderDate(date, position) {
+    if (position === 'right') {
+      return (
+        <Text style={[styles.dateText, {alignSelf: 'flex-end'}]}>{date}</Text>
+      );
+    } else {
+      return (
+        <Text style={[styles.dateText, {alignSelf: 'flex-start'}]}>{date}</Text>
+      );
+    }
+  }
+
   render(){
 
     var {
@@ -130,6 +119,7 @@ export default class Message extends React.Component {
       rowID,
       onErrorButtonPress,
       position,
+      date,
       displayNames,
       diffMessage,
       forceRenderImage,
@@ -148,20 +138,18 @@ export default class Message extends React.Component {
 
     return (
       <View>
-      {position === 'left' ? this.renderName(rowData.name, displayNames, diffMessage) : null}
-      <View style={[styles.rowContainer, {
-          justifyContent: position==='left'?"flex-start":"flex-end"
-        }]}>
-        {position === 'left' ? this.renderImage(rowData, rowID, diffMessage, forceRenderImage, onImagePress) : null}
-        {position === 'right' ? this.renderErrorButton(rowData, rowID, onErrorButtonPress) : null}
-        <RowView
-          {...rowData}
-          renderCustomText={this.props.renderCustomText}
-          styles={styles}
-          />
-        {rowData.position === 'right' ? this.renderImage(rowData, rowID, diffMessage, forceRenderImage, onImagePress) : null}
-      </View>
-      {rowData.position === 'right' ? this.renderStatus(rowData.status) : null}
+        {position === 'left' ? this.renderName(rowData.name, displayNames, diffMessage) : null}
+        <View style={[styles.rowContainer, {
+            alignItems: position==='left'?"flex-start":"flex-end"
+          }]}>
+          <RowView
+            {...rowData}
+            renderCustomText={this.props.renderCustomText}
+            styles={styles}
+            />
+          {this.renderDate(date, position)}
+        </View>
+        {rowData.position === 'right' ? this.renderStatus(rowData.status) : null}
       </View>
     )
   }
