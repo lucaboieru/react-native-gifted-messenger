@@ -1,6 +1,7 @@
 import React, {View, Text, StyleSheet, TouchableHighlight, Image} from 'react-native';
 import Bubble from './Bubble';
 import ErrorButton from './ErrorButton';
+import moment from 'moment';
 
 var styles = StyleSheet.create({
   rowContainer: {
@@ -103,11 +104,11 @@ export default class Message extends React.Component {
   renderDate(date, position) {
     if (position === 'right') {
       return (
-        <Text style={[styles.dateText, {alignSelf: 'flex-end'}]}>{date}</Text>
+        <Text style={[styles.dateText, {alignSelf: 'flex-end'}]}>{moment(date).format('Do MMM, HH:mm')}</Text>
       );
     } else {
       return (
-        <Text style={[styles.dateText, {alignSelf: 'flex-start'}]}>{date}</Text>
+        <Text style={[styles.dateText, {alignSelf: 'flex-start'}]}>{moment(date).format('Do MMM, HH:mm')}</Text>
       );
     }
   }
