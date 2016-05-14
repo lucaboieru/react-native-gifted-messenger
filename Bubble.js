@@ -5,7 +5,7 @@ let styles = StyleSheet.create({
     borderRadius: 15,
     paddingLeft: 14,
     paddingRight: 14,
-    paddingBottom: 10,
+    paddingBottom: 8,
     paddingTop: 8,
   },
   text: {

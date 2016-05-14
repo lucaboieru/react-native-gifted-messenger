@@ -204,7 +204,6 @@ var GiftedMessenger = React.createClass({
 	},
 
 	componentWillReceiveProps(nextProps) {
-		console.log(">>> feaf paekf paekfpo kaeopfk poakf opak");
 		this._data = [];
 		this._rowIds = [];
 		this.appendMessages(nextProps.messages);
@@ -403,7 +402,6 @@ var GiftedMessenger = React.createClass({
 				style={{
 					height: this.state.height,
 				}}
-
 			>
 				<ListView
 					ref='listView'

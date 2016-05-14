@@ -5,13 +5,15 @@ import moment from 'moment';
 
 var styles = StyleSheet.create({
   rowContainer: {
-    flexDirection: 'column',
-    marginBottom: 10,
+    flexDirection: 'row',
+    marginBottom: 26,
     paddingLeft: 10,
     paddingRight: 10
   },
   dateText: {
     fontSize: 10,
+    position: 'absolute',
+    bottom: -14,
     color: '#bbbbbb',
     paddingRight: 7,
     paddingLeft: 7,
@@ -23,20 +25,11 @@ var styles = StyleSheet.create({
     marginLeft: 55,
     marginBottom: 5,
   },
-  imagePosition: {
+  image: {
     height: 30,
     width: 30,
-    alignSelf: 'flex-end',
-    marginLeft: 8,
-    marginRight: 8,
-  },
-  image: {
-    alignSelf: 'center',
     borderRadius: 15,
-  },
-  imageLeft: {
-  },
-  imageRight: {
+    marginRight: 8,
   },
   spacer: {
     width: 10,
@@ -59,19 +52,6 @@ export default class Message extends React.Component {
 
   componentWillMount() {
     Object.assign(styles, this.props.styles);
-  }
-
-  renderName(name, displayNames, diffMessage){
-    if (displayNames === true) {
-      if (diffMessage === null || name !== diffMessage.name) {
-        return (
-          <Text style={[styles.name]}>
-            {name}
-          </Text>
-        );
-      }
-    }
-    return null;
   }
 
   renderErrorButton(rowData, rowID, onErrorButtonPress){
@@ -101,14 +81,22 @@ export default class Message extends React.Component {
     return null;
   }
 
+  renderUserImage(data) {
+    if (!data.image) return null;
+
+    return (
+      <Image source={{uri: data.image}} style={styles.image} />
+    );
+  }
+
   renderDate(date, position) {
     if (position === 'right') {
       return (
-        <Text style={[styles.dateText, {alignSelf: 'flex-end'}]}>{moment(date).format('Do MMM, HH:mm')}</Text>
+        <Text style={[styles.dateText, {right: 5}]}>{moment(date).format('Do MMM, HH:mm')}</Text>
       );
     } else {
       return (
-        <Text style={[styles.dateText, {alignSelf: 'flex-start'}]}>{moment(date).format('Do MMM, HH:mm')}</Text>
+        <Text style={[styles.dateText, {left: 45}]}>{moment(date).format('Do MMM, HH:mm')}</Text>
       );
     }
   }
@@ -139,10 +127,10 @@ export default class Message extends React.Component {
 
     return (
       <View>
-        {position === 'left' ? this.renderName(rowData.name, displayNames, diffMessage) : null}
         <View style={[styles.rowContainer, {
-            alignItems: position==='left'?"flex-start":"flex-end"
-          }]}>
+          justifyContent: position === 'left' ? "flex-start" : "flex-end"
+        }]}>
+          {position === 'left' ? this.renderUserImage(rowData) : null}
           <RowView
             {...rowData}
             renderCustomText={this.props.renderCustomText}
@@ -150,7 +138,6 @@ export default class Message extends React.Component {
             />
           {this.renderDate(date, position)}
         </View>
-        {rowData.position === 'right' ? this.renderStatus(rowData.status) : null}
       </View>
     )
   }
